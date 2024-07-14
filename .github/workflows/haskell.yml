@@ -3,9 +3,10 @@ name: Haskell CI
 on:
   push:
   pull_request:
-  schedule:
-    # Everyday at 4:00 AM UTC
-    - cron: "0 4 * * *"
+  workflow_dispatch:
+  # schedule:
+  #   # Everyday at 4:00 AM UTC
+  #   - cron: "0 4 * * *"
 
 jobs:
   build:
