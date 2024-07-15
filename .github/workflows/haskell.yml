@@ -19,12 +19,17 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest]
-        compiler-nix-name: [ghc810, ghc96]
         include:
           # We want a single job, because macOS runners are scarce.
           - os: macos-latest
             compiler-nix-name: ghc96
+            ghc-path: ""
+          - os: ubuntu-latest
+            compiler-nix-name: ghc96
+            ghc-path: /nix/store/m165yisflwgr4x0jzgzyad0i16fhgs4q-ghc-9.6.5/bin/ghc
+          - os: ubuntu-latest
+            compiler-nix-name: ghc810
+            ghc-path: /nix/store/z4drls8ng4070g6apczfbavwnlibyzhw-ghc-8.10.7/bin/ghc
 
     env:
       # Increment this value to "invalidate" the cabal cache. Be sure to do this
@@ -43,6 +48,7 @@ jobs:
           minimal: false
           # enable IOG-full flavour to bring in all the crypto libraries we need.
           iog-full: true
+
       - name: "macOS: clean up pre-installed libraries"
         if: runner.os == 'macOS'
         # Homebrew's icu4c conflics with Nix's
@@ -59,6 +65,7 @@ jobs:
         with:
           store-path: ~/.cabal-devx/store
           extra-cache-key: "${{ env.CABAL_CACHE_VERSION }}-${{ runner.os }}"
+          ghc-path: ${{ matrix.ghc-path }}
 
       - name: cabal build dependencies
         run: cabal build all -j --enable-tests --only-dependencies
