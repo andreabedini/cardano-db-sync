@@ -55,7 +55,7 @@ jobs:
       # Generate the build plan
       - run: cabal build all --dry-run
 
-      - uses: andreabedini/cabal-cache-native@main
+      - uses: andreabedini/cabal-cache-native@double-check-ghc
         with:
           store-path: ~/.cabal-devx/store
           extra-cache-key: "${{ env.CABAL_CACHE_VERSION }}-${{ runner.os }}"
